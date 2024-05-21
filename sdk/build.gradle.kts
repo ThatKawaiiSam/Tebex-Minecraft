@@ -21,6 +21,7 @@ dependencies {
     implementation("dev.dejvokep:boosted-yaml:1.3")
     implementation("com.google.code.gson:gson:2.10.1")
     compileOnly("com.google.guava:guava:30.1.1-jre")
+    compileOnly("com.lunarclient:apollo-api:1.1.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 }
 

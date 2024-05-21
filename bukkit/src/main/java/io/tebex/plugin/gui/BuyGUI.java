@@ -3,6 +3,7 @@ package io.tebex.plugin.gui;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import io.tebex.plugin.TebexPlugin;
+import io.tebex.plugin.util.EmbeddedCheckoutUtil;
 import io.tebex.plugin.util.MaterialUtil;
 import io.tebex.sdk.obj.Category;
 import io.tebex.sdk.obj.CategoryPackage;
@@ -95,6 +96,15 @@ public class BuyGUI {
         category.getPackages().forEach(categoryPackage -> subListingGui.addItem(getPackageItemBuilder(categoryPackage).asGuiItem(action -> {
             action.setCancelled(true);
             player.closeInventory();
+
+            // Use Embedded Checkout if available
+            if (EmbeddedCheckoutUtil.attemptEmbeddedCheckout(
+                    platform,
+                    player,
+                    categoryPackage.getId()
+            )) {
+                return;
+            }
 
             // Create Checkout Url
             platform.getSDK().createCheckoutUrl(categoryPackage.getId(), player.getName()).thenAccept(checkout -> {

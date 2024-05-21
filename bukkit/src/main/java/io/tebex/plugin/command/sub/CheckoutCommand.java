@@ -2,8 +2,10 @@ package io.tebex.plugin.command.sub;
 
 import io.tebex.plugin.TebexPlugin;
 import io.tebex.plugin.command.SubCommand;
+import io.tebex.plugin.util.EmbeddedCheckoutUtil;
 import io.tebex.sdk.obj.CheckoutUrl;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.concurrent.ExecutionException;
 
@@ -28,6 +30,18 @@ public class CheckoutCommand extends SubCommand {
 
         try {
             int packageId = Integer.parseInt(args[0]);
+
+            // Use Embedded Checkout if available
+            if (sender instanceof Player) {
+                if (EmbeddedCheckoutUtil.attemptEmbeddedCheckout(
+                        platform,
+                        ((Player) sender),
+                        packageId
+                )) {
+                    return;
+                }
+            }
+
             CheckoutUrl checkoutUrl = platform.getSDK().createCheckoutUrl(packageId, sender.getName()).get();
             sender.sendMessage("§b[Tebex] §7Checkout started! Click here to complete payment: " + checkoutUrl.getUrl());
         } catch (InterruptedException|ExecutionException e) {
