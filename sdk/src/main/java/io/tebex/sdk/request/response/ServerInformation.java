@@ -71,6 +71,15 @@ public class ServerInformation {
             return domain;
         }
 
+        /**
+         * Gets the domain without the protocol (http:// or https://).
+         *
+         * @return The domain without the protocol.
+         */
+        public String getDomainWithoutProtocol() {
+            return domain.replaceFirst("https://", "").replaceFirst("http://", "");
+        }
+
         public String getName() {
             return name;
         }

@@ -40,6 +40,8 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.tebex.plugin.util.EmbeddedCheckoutUtil.CHECKOUT_CHANNEL;
+
 /**
  * The Bukkit platform.
  */
@@ -73,6 +75,12 @@ public final class TebexPlugin extends JavaPlugin implements Platform {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        // Register LC Channel
+        getServer().getMessenger().registerOutgoingPluginChannel(this, CHECKOUT_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, CHECKOUT_CHANNEL, (channel, player, message) -> {
+            // Nothing
+        });
 
         // Initialise Managers.
         new CommandManager(this).register();
@@ -126,6 +134,11 @@ public final class TebexPlugin extends JavaPlugin implements Platform {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("Failed to get the CommandMap", e);
         }
+    }
+
+    @Override
+    public void onDisable() {
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, CHECKOUT_CHANNEL);
     }
 
     public List<Category> getStoreCategories() {

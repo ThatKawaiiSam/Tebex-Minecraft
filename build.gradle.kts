@@ -48,6 +48,10 @@ subprojects {
         maven("https://maven.nucleoid.xyz/") {
             name = "nucleoid"
         }
+        maven {
+            name = "lunarclient"
+            url = uri("https://repo.lunarclient.dev")
+        }
     }
 
     tasks.named("processResources", Copy::class.java) {

@@ -2,6 +2,7 @@ package io.tebex.plugin.command.sub;
 
 import io.tebex.plugin.TebexPlugin;
 import io.tebex.plugin.command.SubCommand;
+import io.tebex.plugin.util.EmbeddedCheckoutUtil;
 import io.tebex.sdk.obj.CheckoutUrl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,6 +32,16 @@ public class SendLinkCommand extends SubCommand {
             }
 
             int packageId = Integer.parseInt(args[1]);
+
+            // Use Embedded Checkout if available
+            if (EmbeddedCheckoutUtil.attemptEmbeddedCheckout(
+                    platform,
+                    player,
+                    packageId
+            )) {
+                return;
+            }
+
             CheckoutUrl checkoutUrl = platform.getSDK().createCheckoutUrl(packageId, username).get();
             player.sendMessage("§b[Tebex] §7A checkout link has been created for you. Click here to complete payment: " + checkoutUrl.getUrl());
         } catch (InterruptedException|ExecutionException e) {
